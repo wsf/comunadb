@@ -73,7 +73,7 @@ def csv2sql(archivo):
             if len(vence)  == 9:
                 fecha_vencimiento = f"{vence[5:9]}-{vence[2:4]}-{vence[0:1]}"
             else:
-                fecha_vencimiento = f"{vence[6:9]}-{vence[3:5]}-{vence[0:2]}"
+                fecha_vencimiento = f"{vence[6:10]}-{vence[3:5]}-{vence[0:2]}"
 
             fecha_emision = "2023-07-01"
             importe_total = total
