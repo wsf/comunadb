@@ -51,29 +51,39 @@ def ultimo_recibo():
 def csv2sql(archivo):
 
     nro_recibo = int(ultimo_recibo())
+    print("Nro recibo: ", nro_recibo)
+
     sql = ""
+    contador = 0
 
     with open(archivo,"r") as f:
         for ff in f:
             l = ff.split(",")
             mes = l[0]
             vence = l[1]
-            total = l[11].strip()
+            #total = l[11].strip()
+            total = l[7].strip()
             ano = l[2]
 
-            mes2 = men2num(mes)
+            if len(vence)  == 9:
+                mes2 = f"{vence[0:1]}"
+            else:
+                mes2 = f"{vence[0:2]}"
+
+
+            #mes2 = men2num(mes)
 
             ## making
-            mes2 = men2num(mes)
+            #mes2 = men2num(mes)
 
             periodo_anomes = f"{str(mes2).zfill(2)}/{ano}"
             id_contribuyentes = 1638
             nro_recibo += 1
 
             if len(vence)  == 9:
-                fecha_vencimiento = f"{vence[5:9]}-{vence[2:4]}-{vence[0:1]}"
+                fecha_vencimiento = f"{vence[5:9]}-{vence[2:4]}-{vence[0:1].zfill(2)}"
             else:
-                fecha_vencimiento = f"{vence[6:10]}-{vence[3:5]}-{vence[0:2]}"
+                fecha_vencimiento = f"{vence[6:10]}-{vence[3:5]}-{vence[0:2].zfill(2)}"
 
             fecha_emision = "2023-07-01"
             importe_total = total
@@ -83,7 +93,8 @@ def csv2sql(archivo):
 
             campos = "nro_recibo,periodo_anomes,id_contribuyentes,fecha_emision,fecha_vencimiento,importe_total,fecha_vencimiento2,importe_total2,fecha_vencimiento3,importe_total3,id_tipos_zonas, id_estados"
             valores = f"{nro_recibo},'{periodo_anomes}',{id_contribuyentes},'{fecha_emision}','{fecha_vencimiento}',{importe_total},'{fecha_vencimiento}',{importe_total},'{fecha_vencimiento}',{importe_total},{1},'{'IM'}'"
-            sql += f"insert into recibo_resumen ({campos}) values ({valores});"
+            sql += f"insert into recibo_resumen ({campos}) values ({valores});\n"
+            contador += 1
 
         sql2 = f"UPDATE numeros SET numero = '{nro_recibo}' WHERE id_numeros = '1';"
 
@@ -91,6 +102,10 @@ def csv2sql(archivo):
         sql = sql + sql2
 
         print(sql)
+
+        print(contador)
+        print("Nro recibo: ", nro_recibo)
+        print(nro_recibo - contador)
 
 
 def men2num(mes):
@@ -100,8 +115,8 @@ def men2num(mes):
     return n+1
 
 
-
-csv2sql("ferrocarril.csv")
+#csv2sql("ferrocarril.csv")
+csv2sql("ferrocarril_agregados_v2.csv")
 
 
 
